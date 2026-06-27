@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="public/dot_central.png" alt="Dot.Central" width="280" />
+
 <h1>Dot.Central</h1>
 
 <p>AI agent hub — create, configure, and converse with specialised AI agents powered by Claude.</p>
