@@ -1,101 +1,79 @@
 <div align="center">
 
-<img src="public/dot_central.png" alt="Dot.Central" width="280" />
+<img src="docs/logo.svg" alt="Dot.Central" width="320" />
 
-<h1>Dot.Central</h1>
+<br /><br />
 
-<p>AI agent hub — create, configure, and converse with specialised AI agents powered by Claude.</p>
+**Create, configure, and converse with specialised AI agents powered by Claude.**
 
-[![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat-square&logo=php&logoColor=white)](https://php.net)
-[![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
-[![Livewire](https://img.shields.io/badge/Livewire-3.x-4E56A6?style=flat-square)](https://livewire.laravel.com)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql&logoColor=white)](https://postgresql.org)
-[![Claude](https://img.shields.io/badge/Claude-Anthropic-D97757?style=flat-square)](https://anthropic.com)
-[![Tests](https://img.shields.io/badge/tests-37%20passing-brightgreen?style=flat-square)](tests/)
-[![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
+<br />
+
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat-square&logo=laravel&logoColor=white) ![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat-square&logo=php&logoColor=white) ![Livewire](https://img.shields.io/badge/Livewire-3-FB70A9?style=flat-square) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat-square&logo=postgresql&logoColor=white)
+
+<br /><br />
+
+**Part of the [InfoDot Ecosystem](https://github.com/sakhileb/InfoDot)** &nbsp;·&nbsp; `central.infodot.app`
 
 </div>
 
 ---
 
-## Overview
+## What is Dot.Central?
 
-Dot.Central is the AI agent hub in the Dot ecosystem. Build specialised agents with custom system prompts, equip them with skills, and hold multi-turn conversations with full history. Every token consumed is logged for usage analytics and cost tracking.
+Dot.Central is the AI command centre in the InfoDot ecosystem. Teams create specialised Claude-powered agents with custom system prompts, knowledge bases, and tool integrations — then converse with them directly or route tasks from other Dot platforms through them.
 
----
+## Core Features
 
-## Features
+- Agent builder — system prompt, persona, and tool configuration
+- Conversation interface with streaming responses
+- Knowledge base upload — ground agents on internal documents
+- Multi-agent routing — chain agents for complex workflows
+- Usage and cost tracking per agent and per team member
+- Conversation history with search and export
+- API endpoint per agent for external integrations
+- Ecosystem SSO from InfoDot hub
 
-- **Agent builder** — define system prompts, model, capabilities, and skill assignments
-- **Agent skills** — composable skill registry that agents can invoke during conversations
-- **Multi-turn conversations** — persistent conversation history with role tracking (user/assistant)
-- **AgentChat Livewire** — real-time streaming chat interface with send/new conversation actions
-- **Token usage logging** — input tokens, output tokens, and model recorded per message
-- **Mock fallback** — works without `ANTHROPIC_API_KEY` for local development
-- **Ecosystem SSO** — authenticate from InfoDot with a single click
+## Domain Models
 
----
-
-## Architecture
-
-```php
-// AgentChatService handles the full Claude API call
-public function chat(Conversation $conversation, string $userMessage, int $userId): ?string
-{
-    // 1. Persist user message
-    // 2. Build history from conversation.messages
-    // 3. Call Anthropic API with agent's system_prompt
-    // 4. Persist assistant reply
-    // 5. Log token usage to AgentUsageLog
-}
-```
-
----
-
-## Domain Model
-
-```
-Agent (system_prompt, model, capabilities JSON)
-    ← agent_agent_skill → AgentSkill
-    → Conversations → Messages (role: user|assistant)
-    → AgentUsageLogs (input_tokens, output_tokens, model)
-```
-
----
+- **CentralAgent** — Claude-backed AI persona
+- **CentralConversation** — full message thread
+- **CentralMessage** — individual turn in a conversation
+- **AgentKnowledge** — uploaded context document
 
 ## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Framework | Laravel 12 + PHP 8.4 |
-| Frontend | Livewire 3 + Alpine.js + Tailwind CSS |
-| Auth | Jetstream 5 + Sanctum (ecosystem SSO) |
-| Database | PostgreSQL 16 (shared infodot instance) |
-| AI | Anthropic Claude API (claude-sonnet-4-6 default) |
-| WebSockets | Laravel Reverb |
-
----
+| Framework | Laravel 12 |
+| Language | PHP 8.4 |
+| Frontend | Livewire 3 · Alpine.js 3 · Tailwind CSS |
+| Database | PostgreSQL 16 (shared across ecosystem) |
+| Realtime | Laravel Reverb |
+| Auth | Laravel Sanctum (InfoDot SSO) |
+| AI | Anthropic Claude (`claude-sonnet-4-6`) |
+| Storage | AWS S3 / Local (Flysystem) |
+| Search | Laravel Scout · Meilisearch |
+| Queue | Redis · Laravel Horizon |
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/sakhileb/Dot.Central.git && cd Dot.Central
-composer install && npm install
-cp .env.example .env && php artisan key:generate
-# Add ANTHROPIC_API_KEY to .env (optional — mock fallback works without it)
-php artisan migrate && npm run dev & php artisan serve
+git clone https://github.com/sakhileb/Dot.Central.git
+cd Dot.Central
+cp .env.example .env
+composer install
+npm install && npm run build
+php artisan key:generate
+php artisan migrate
+php artisan serve
 ```
 
-```bash
-bash bin/test.sh   # 37 passing, 0 failed, 7 skipped
-```
+> **Ecosystem SSO:** Set `DB_*` env vars to the shared InfoDot PostgreSQL instance and `APP_URL=https://central.infodot.app`. Users authenticated through InfoDot gain access automatically via Sanctum handoff tokens.
 
----
+## Ecosystem
 
-## Part of the Dot Ecosystem
+**Dot.Central** is one of **21 platforms** in the InfoDot ecosystem, connected via shared PostgreSQL and Sanctum SSO. Visit [InfoDot](https://github.com/sakhileb/InfoDot) to explore the full platform map.
 
-Dot.Central connects to [InfoDot](https://github.com/sakhileb/InfoDot) — the central hub. Log in to InfoDot once and navigate here without re-authenticating via `/auth/ecosystem`.
+## License
 
----
-
-MIT — © SK Digital / BluPin Incorporated
+MIT © [SK Digital / BluPin Incorporated](https://github.com/sakhileb)
